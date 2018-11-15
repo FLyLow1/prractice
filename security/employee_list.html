@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<form action="{url:/security/export}" method='post'>
+	<input type='submit' value='导出'>
+</form>
+
+<form action="{url:/security/import}" method='post'>
+	<input type='submit' value='导入'>
+</form>
+
+<form action="{url:/security/employee_list}" method='post'>
+	用户名 <input type='text' name='keyword'>
+	<input type='submit' value='搜索'>
+</form>
+<table border='1'>
+	<tr><th>序号</th><th>用户名</th><th>真实姓名</th><th>工资</th></tr>
+	{foreach:items=$data}
+	<tr><td>{echo:$key+1}</td><td>{echo:$item['username']}</td><td>{echo:$item['truename']}</td><td>{echo:$item['salary']}</td></tr>
+	{/foreach}
+</table>
+</body>
+</html>

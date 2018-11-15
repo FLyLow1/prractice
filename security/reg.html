@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<!-- 使用模板标签url生成路由地址（URL地址），语法 {url:控制器/方法} ，下述代码会生成 /index.php?controller=security&action=reg_ok 地址-->
+<!-- 单击提交按钮时，调用valid函数，验证表单元素，如果验证通过，则提交表单，否则不能提交 -->
+<form action="{url:/security/reg_ok}" method='post' onsubmit='return valid();'>
+	<p>用户名<input type='text' name='username' id='username'></p>
+	<p>密码<input type='password' name='password' id='password'></p>
+	<p>确认密码<input type='password' name='repassword' id='repassword'></p>
+	<p>真实姓名<input type='text' name='truename' id='truename'></p>
+	<!-- type为number的含义是对文本框施加验证规则————工资文本框必须输入数字；也可以在valid函数中编写自定义验证规则 -->
+	<p>工资<input type='number' name='salary' id='salary'></p>
+	<p><input type='submit' value='注册'></p>
+</form>
+</body>
+</html>
+
+<script>
+// 验证规则
+function valid(){
+	var username=document.getElementById('username').value;
+	var password=document.getElementById('password').value;
+	var repassword=document.getElementById('repassword').value;
+	var salary=document.getElementById('salary').value;
+	if(username.length==0 || username==''){
+		alert('用户名不能为空！');
+		return false;		// 取消提交表单
+	}
+	if(password!=repassword){
+		alert('密码与确认密码不一致，请重新输入');
+		return false;		// 取消提交表单
+	}
+	return true;		// 提交表单
+}
+</script>

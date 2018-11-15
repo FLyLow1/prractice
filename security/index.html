@@ -1,0 +1,19 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<table border='1'>
+<tr><th>序号</th><th>用户名</th><th>注册时间</th><th>操作</th></tr>
+<!-- 循环（遍历）后台传递过来的$data(注册用户的信息) -->
+{foreach:items=$data key=$key item=$value }
+	<tr>
+		<td>{echo:$key+1}</td>
+		<td>{$value['username']}</td>
+		<td>{echo:date('Y-m-d',$value['addtime'])}</td>
+		<td><a href="{url:security/delete/id/$value['id']}">删除</a></td>
+	</tr>
+{/foreach}
+</table>
+</body>
+</html>
