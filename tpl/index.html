@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="">
+    城市 <input type="text" name="city" id="city">
+</form>
+<div id="container" style="width: 600px; height: 400px;"></div>
+
+</body>
+</html>
+<script src="../note/jquery-1.8.3.min.js"></script>
+<script src="highcharts.js"></script>
+<script src="https://img.hcharts.cn/highcharts/highcharts-more.js"></script>
+<script>
+
+    $("#city").on('blur',function () {
+        var  city=$("#city").val();
+        if(city=='' || $.trim(city).length==0){
+            alert('文本框不能为空')
+            return;
+        }
+        if(city.length>30){
+            alert('文本框中数据长度超过30了，不能超过30个字符！');
+            return;
+        }
+        var reg=/^[A-Za-z0-9\u4e00-\u9fa5]+$/i;
+        if(!reg.test(city)){
+            alert('城市输入有误，只能输入字母、数字或汉字，不能输入特殊字符');
+            return;
+        }
+        $.ajax({
+            url:'process.php',
+            type:'get',
+            dataType:'json',
+            data:{'city':city},
+            success:function (msg) {
+                var resultArr=new Array();
+                var tempArr=new Array();
+                data=eval(msg);
+                for(var i=0; i<data.length;i++){
+                    tempArr.push(data[i]['date']);
+                    var max=parseFloat(data[i]['tmp_max']);
+                    var min=parseFloat(data[i]['tmp_min']);
+                    var arr=[max,min];
+                    // var tmpArr=arr.map(Number);
+                    resultArr.push(arr);
+                    console.log(resultArr);
+                }
+                showweather(tempArr,resultArr);
+            }
+        });
+    })
+    function  showweather(tempArr,resultArr) {
+        var  city=$("#city").val();
+        var chart = Highcharts.chart('container', {
+            chart: {
+                type: 'columnrange', // columnrange 依赖 highcharts-more.js
+                inverted: true
+            },
+            title: {text: '每月温度变化范围'},
+            xAxis: {categories: tempArr},
+            yAxis: {title: {text: '温度 ( °C )'}},
+            plotOptions: {
+                columnrange: {
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function () {
+                            return this.y + '°C';
+                        }
+                    }
+                }
+            },
+            series: [{name: '温度',data: resultArr}]
+        });
+    }
+</script>
