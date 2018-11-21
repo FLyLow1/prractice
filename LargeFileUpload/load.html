@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="load.php" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="video">
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
+<script src="../jquery-1.8.3.js"></script>
+<script>
+    var start,length,end,file,blob,no;
+    //start 剪切开始的位置,lengtn剪切的长度,end剪切结束的位置,file需要剪切的文件,blob剪切完成的小片段 no切片序列号
+    $("#video").on('change',function () {
+        start=0;
+        length=1024*1024;
+        end=start+length;
+        no=1;
+        console.log(document.getElementById('video').files[0]);
+        file=document.getElementById('video').files[0];
+        blob=cutFile();
+        sendFile();
+    });
+    function cutFile() {
+        //JS中一个剪切的函数slice
+        blob=file.slice(start,end);
+        start=end;
+        end=start+length;
+        return blob;
+    }
+    function  sendFile() {
+        var fd = new FormData();
+        fd.append('blob',blob);
+        fd.append('no',no);
+        fd.append('name',file.name);
+        fd.append('cnt',Math.ceil(file.size/length));
+        //发送ajax请求
+        $.ajax({
+            url:"upload.php",
+            type:'post',
+            data:fd,
+            processData:false,
+            contentType:false,
+            success:function () {
+
+            }
+        });
+        //ajax结束  5
+        //  start  end
+        //  0       2
+        //  2       4
+        //  4       6
+        //  6       8
+        if(start<file.size) {
+            var t=setTimeout(function () {
+                no++;
+                cutFile();
+                sendFile();
+            },1000);
+        }else{
+            clearTimeout(t); //判断传输完成,结束定时器
+        }
+    }
+
+
+</script>
